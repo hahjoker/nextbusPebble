@@ -34,19 +34,7 @@ ajax({ url: 'http://runextbus.herokuapp.com/active', type: 'json' },
   }   // End of error callback
 );
 
-ajax({ url: 'http://runextbus.herokuapp.com/config', type: 'json' },
-  function(data) {    
-    console.log('Received data from `http://runextbus.herokuapp.com/config`.');
-    config = data;
-  },  // End of success callback
 
-  function(error) {
-    console.log('Error receiving reddit data.');  
-    main.body("Could not fetch config file.");
-    
-    activeBuses = "Error";
-  }   // End of error callback
-);
 
 
 main.on('click', 'up', function(e) {
@@ -63,7 +51,7 @@ main.on('click', 'up', function(e) {
   var busTags=[ activeBuses.routes.length];
   for (var i = 0; i < activeBuses.routes.length; i++) {
     menu.items(i, [ { title: activeBuses.routes[i].title, subtitle: 'Select for stops' }]);
-		busTags=[activeBuses.routes[i].tag];
+		busTags[i]=activeBuses.routes[i].tag;
 		console.log(busTags[i]);
 		//activeBuses.routes[i].tag Access to bus tag call func
   }
@@ -76,9 +64,28 @@ main.on('click', 'up', function(e) {
 				}]
 			}]
 		});
-		for (var i = 0; i < config.routes.busTags[i].stops.length; i++) 
+    
+    console.log('e.sectionIndex = ' + e.sectionIndex);
+    
+    // Get Config from Rutgers Database
+    ajax({ url: 'http://runextbus.herokuapp.com/route/' + activeBuses.routes[e.sectionIndex].tag, type: 'json' },
+      function(data) {    
+        console.log('Received data from `http://runextbus.herokuapp.com/route/' + activeBuses.routes[e.sectionIndex].tag + '`.');
+        config = data;
+      },  // End of success callback
+    
+      function(error) {
+        console.log('Error receiving reddit data.');  
+        main.body("Could not fetch config file.");
+        
+        activeBuses = "Error";
+      }   // End of error callback
+    );
+    
+		for (var i = 0; i < config.routes[e.sectionIndex].stops.length; i++) 
 		{
-				innerMenu.items(i, [ { title: config.routes.busTags[i].stops[i], subtitle: 'Select for times' }]);
+      
+				innerMenu.items(i, [ { title: config.routes[e.sectionIndex].stops[i], subtitle: 'Select for times' }]);
 		//activeBuses.routes[i].tag Access to bus tag call func
 		}
 		innerMenu.show();
