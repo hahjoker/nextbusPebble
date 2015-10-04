@@ -53,25 +53,35 @@ main.on('click', 'up', function(e) {
 		var menu = new UI.Menu({
 			sections: [{
 				items: [{
-					title: activeBuses.routes[0].title,
-					icon: '/menu_icon.png',
-					subtitle: 'Can do Menus'
-				}, {
-					title: 'Second Item',
-					subtitle: 'Subtitle Text'
+					
 				}]
 			}]
       
       
   });
   
-  
+  var busTags=[ activeBuses.routes.length];
   for (var i = 0; i < activeBuses.routes.length; i++) {
-    menu.items(i, [ { title: activeBuses.routes[i].title, subtitle: activeBuses.routes[i].tag }]);
+    menu.items(i, [ { title: activeBuses.routes[i].title, subtitle: 'Select for stops' }]);
+		busTags=[activeBuses.routes[i].tag];
+		console.log(busTags[i]);
+		//activeBuses.routes[i].tag Access to bus tag call func
   }
   
   menu.on('select', function(e) {
-		
+		var innerMenu = new UI.Menu
+		({
+			sections: [{
+				items: [{
+				}]
+			}]
+		});
+		for (var i = 0; i < config.routes.busTags[i].stops.length; i++) 
+		{
+				innerMenu.items(i, [ { title: config.routes.busTags[i].stops[i], subtitle: 'Select for times' }]);
+		//activeBuses.routes[i].tag Access to bus tag call func
+		}
+		innerMenu.show();
     console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
     console.log('The item is titled "' + e.item.title + '"');
 		
