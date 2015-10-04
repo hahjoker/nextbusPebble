@@ -21,44 +21,34 @@ var activeBuses, config;
 
 // Get Active Buses from Rutgers Database
 ajax({ url: 'http://runextbus.herokuapp.com/active', type: 'json' },
-  function(data) {    
-    console.log('Received data from `http://runextbus.herokuapp.com/active`.');
-    activeBuses = data;
-  },  // End of success callback
-
-  function(error) {
-    console.log('Error receiving reddit data.');  
-    main.body("Could not fetch active buses.");
-    
-    activeBuses = "Error";
-  }   // End of error callback
+	function(data) {    
+		console.log('Received data from `http://runextbus.herokuapp.com/active`.');
+		activeBuses = data;
+	},  // End of success callback
+	function(error) {
+		console.log('Error receiving data.');  
+		main.body("Could not fetch active buses.");
+		
+		activeBuses = "Error";
+	}   // End of error callback
 );
 
-
-
-
 main.on('click', 'up', function(e) {
-		var menu = new UI.Menu({
-			sections: [{
-				items: [{
-					
-				}]
+	var menu = new UI.Menu({
+		sections: [{
+			items: [{				
 			}]
-      
-      
+		}]      
   });
   
-  var busTags=[ activeBuses.routes.length];
-  for (var i = 0; i < activeBuses.routes.length; i++) {
-    menu.items(i, [ { title: activeBuses.routes[i].title, subtitle: 'Select for stops' }]);
-		busTags[i]=activeBuses.routes[i].tag;
-		console.log(busTags[i]);
+
+	for (var i = 0; i < activeBuses.routes.length; i++) {
+		menu.items(i, [ { title: activeBuses.routes[i].title, subtitle: 'Select for stops' }]);
 		//activeBuses.routes[i].tag Access to bus tag call func
-  }
+	}
   
-  menu.on('select', function(e) {
-		var innerMenu = new UI.Menu
-		({
+	menu.on('select', function(e) {
+		var innerMenu = new UI.Menu({
 			sections: [{
 				items: [{
 				}]
@@ -67,31 +57,39 @@ main.on('click', 'up', function(e) {
     
     console.log('e.sectionIndex = ' + e.sectionIndex);
     
-    // Get Config from Rutgers Database
-    ajax({ url: 'http://runextbus.herokuapp.com/route/' + activeBuses.routes[e.sectionIndex].tag, type: 'json' },
-      function(data) {    
-        console.log('Received data from `http://runextbus.herokuapp.com/route/' + activeBuses.routes[e.sectionIndex].tag + '`.');
-        config = data;
-      },  // End of success callback
+		// Get Config from Rutgers Database
+		ajax({ url: 'http://runextbus.herokuapp.com/route/' + activeBuses.routes[e.sectionIndex].tag, type: 'json' },
+			function(data) {    
+				console.log('Received data from `http://runextbus.herokuapp.com/route/' + activeBuses.routes[e.sectionIndex].tag + '`.');
+				config = data;
+			},  // End of success callback
     
-      function(error) {
-        console.log('Error receiving reddit data.');  
-        main.body("Could not fetch config file.");
+			function(error) {
+				console.log('Error receiving data.');  
+				main.body("Could not fetch config file.");
+				
+				config = "Error";
+			}   // End of error callback
+		);
+    
+		console.log('CONFIG=' + config);
         
-        activeBuses = "Error";
-      }   // End of error callback
-    );
+        for (var i = 0; i < config.title.length; i++) 
+        {
+          
+          innerMenu.items(i, [ { title: config.title[i], subtitle: 'Select for times' }]);
+          //activeBuses.routes[i].tag Access to bus tag call func
+        }
+        innerMenu.show();
     
-		for (var i = 0; i < config.routes[e.sectionIndex].stops.length; i++) 
-		{
+    while (typeof config === "undefined") {
       
-				innerMenu.items(i, [ { title: config.routes[e.sectionIndex].stops[i], subtitle: 'Select for times' }]);
-		//activeBuses.routes[i].tag Access to bus tag call func
-		}
-		innerMenu.show();
+    }
+    
     console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
     console.log('The item is titled "' + e.item.title + '"');
 		
+    
   });
   menu.show();
 });
