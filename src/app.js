@@ -8,13 +8,34 @@ var UI = require('ui');
 var ajax = require('ajax');
 var Vector2 = require('vector2');
 
-var main = new UI.Card({
-  title: 'NextBus Pebble App',
-  icon: '/bus.png',
-  subtitle: '',
-  body: 'Press  button.'
-});
+var main= new UI.Window({
+    fullscreen: true,
+  });
+  var textfield = new UI.Text({
+    position: new Vector2(0, 15),
+    size: new Vector2(144, 30),
+    font: 'gothic-24-bold',
+    text: 'R Bus',
+    textAlign: 'center'
+  });
+  var textfield1 = new UI.Text({
+    position: new Vector2(0, 115),
+    size: new Vector2(144, 30),
+    font: 'gothic-24-bold',
+    text: 'By PC and VM',
+    textAlign: 'center'
+  });
 
+  var textfield2 = new UI.Text({
+    position: new Vector2(0, 75),
+    size: new Vector2(144, 30),
+    font: 'gothic-24-bold',
+    text: 'Hit the ---->',
+    textAlign: 'center'
+  });
+  main.add(textfield);
+	main.add(textfield1);
+	main.add(textfield2);
 main.show();
 
 var activeBuses, config;
@@ -33,7 +54,7 @@ ajax({ url: 'http://runextbus.herokuapp.com/active', type: 'json' },
 	}   // End of error callback
 );
 
-main.on('click', 'up', function(e) {
+main.on('click', 'select', function(e) {
 	var menu = new UI.Menu({
 		sections: [{
 			items: [{				
