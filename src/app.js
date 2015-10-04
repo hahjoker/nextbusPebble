@@ -23,12 +23,7 @@ var activeBuses;
 ajax({ url: 'http://runextbus.herokuapp.com/active', type: 'json' },
   function(data) {    
     console.log('Received data from `http://runextbus.herokuapp.com/active`.');
-    
     activeBuses = data;
-    
-    console.log(activeBuses);
-    
-    main.body("Press select to browse.\n\nShake to refresh.");
   },  // End of success callback
 
   function(error) {
@@ -40,11 +35,10 @@ ajax({ url: 'http://runextbus.herokuapp.com/active', type: 'json' },
 );
 
 main.on('click', 'up', function(e) {
-   
 		var menu = new UI.Menu({
 			sections: [{
 				items: [{
-					title: 'Menu Item 1',
+					title: activeBuses.routes[0].title,
 					icon: '/menu_icon.png',
 					subtitle: 'Can do Menus'
 				}, {
@@ -53,7 +47,14 @@ main.on('click', 'up', function(e) {
 				}]
 			}]
       
+      
   });
+  
+  
+  for (var i = 0; i < activeBuses.routes.length; i++) {
+    menu.items(i, [ { title: activeBuses.routes[i].title, subtitle: activeBuses.routes[i].tag }]);
+  }
+  
   menu.on('select', function(e) {
     console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
     console.log('The item is titled "' + e.item.title + '"');
