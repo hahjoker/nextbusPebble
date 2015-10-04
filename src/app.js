@@ -5,6 +5,7 @@
  */
 
 var UI = require('ui');
+var ajax = require('ajax');
 var Vector2 = require('vector2');
 
 var main = new UI.Card({
@@ -16,11 +17,34 @@ var main = new UI.Card({
 
 main.show();
 
+var activeBuses;
+
+// Get Active Buses from Rutgers Database
+ajax({ url: 'http://runextbus.herokuapp.com/active', type: 'json' },
+  function(data) {    
+    console.log('Received data from `http://runextbus.herokuapp.com/active`.');
+    
+    activeBuses = data;
+    
+    console.log(activeBuses);
+    
+    main.body("Press select to browse.\n\nShake to refresh.");
+  },  // End of success callback
+
+  function(error) {
+    console.log('Error receiving reddit data.');  
+    main.body("Could not fetch active buses.");
+    
+    activeBuses = "Error";
+  }   // End of error callback
+);
+
 main.on('click', 'up', function(e) {
+   
 		var menu = new UI.Menu({
 			sections: [{
 				items: [{
-					title: 'Pebble.js',
+					title: 'Menu Item 1',
 					icon: '/menu_icon.png',
 					subtitle: 'Can do Menus'
 				}, {
@@ -28,6 +52,7 @@ main.on('click', 'up', function(e) {
 					subtitle: 'Subtitle Text'
 				}]
 			}]
+      
   });
   menu.on('select', function(e) {
     console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
@@ -55,6 +80,6 @@ main.on('click', 'down', function(e) {
   var card = new UI.Card();
   card.title('A Card');
   card.subtitle('Is a Window');
-  card.body('The simplest window type in Pebble.js.');
+  card.body("nul");
   card.show();
 });
