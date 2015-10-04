@@ -9,25 +9,25 @@ var Vector2 = require('vector2');
 
 var main = new UI.Card({
   title: 'NextBus Pebble App',
-  icon: '',
+  icon: '/bus.png',
   subtitle: '',
-  body: 'Press any button.'
+  body: 'Press  button.'
 });
 
 main.show();
 
 main.on('click', 'up', function(e) {
-  var menu = new UI.Menu({
-    sections: [{
-      items: [{
-        title: 'Pebble.js',
-        icon: 'images/menu_icon.png',
-        subtitle: 'Can do Menus'
-      }, {
-        title: 'Second Item',
-        subtitle: 'Subtitle Text'
-      }]
-    }]
+		var menu = new UI.Menu({
+			sections: [{
+				items: [{
+					title: 'Pebble.js',
+					icon: '/menu_icon.png',
+					subtitle: 'Can do Menus'
+				}, {
+					title: 'Second Item',
+					subtitle: 'Subtitle Text'
+				}]
+			}]
   });
   menu.on('select', function(e) {
     console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
